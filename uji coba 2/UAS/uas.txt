@@ -1,0 +1,195 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <conio.h>
+
+struct Produk{
+	char nama[50];
+	double harga;
+	Produk *kiri;
+	Produk *kanan;
+	
+};
+
+struct BinarySearchTree {
+	Produk *root;
+};
+
+
+Produk* makeProduk(char nama[], double harga);
+void insertProduk(char nama[], double harga, BinarySearchTree *T);
+void printTreeInOrder(Produk *root);
+Produk* searchProduk(char name[], Produk *root);
+void updateProduk(char nama[], double harga, Produk *node);
+
+int main(){
+	int pilih, angka;
+	char pilih2[5];
+	char nama_product[50];
+	double harga_product;
+	BinarySearchTree T;
+	T.root = NULL;
+	Produk *search_product;
+	
+	do{
+		system("cls");
+		printf("===========================\n");
+		printf(" Aplikasi CRUD Product \n");
+		printf("===========================\n");
+		printf(" 1. Add Product\n");
+		printf(" 2. Edit Produk Price\n");
+		printf(" 3. Delete Product\n");
+		printf(" 4. Search Product\n");
+		printf(" 5. Show All Product (in order)\n");
+		printf("===========================\n");
+		printf(" Pilih menu [1/2/3/4/5] : "); scanf("%d",&pilih);
+		
+		switch(pilih){
+			case 1:
+					system("cls");
+					printf("************************************\n");
+					printf(" Add Product \n");
+					printf("************************************\n");
+					printf(" Product Name  : "); scanf("%s", nama_product);
+					printf(" Product Price : "); scanf("%lf",&harga_product);
+					insertProduk(nama_product, harga_product, &T);
+					printf("************************************\n");
+					printf(">>press any key to home menu\n");
+				 	getch(); break;
+				 	
+			case 2:
+					system("cls");
+					printf("************************************\n");
+					printf("Edit Product\n");
+					printf("************************************\n");
+					printf("   Search Product : "); scanf("%s", nama_product);
+					search_product = searchProduk(nama_product, T.root);
+					if(search_product == NULL)
+					{
+						printf("Product not found ...\n\n");
+					}else{
+					printf("************************************\n");
+					printf("Product found ...\n\n");
+					printf("************************************\n");
+					printf("   New Product Name  : "); scanf("%s", nama_product);
+					printf("   New Product Price : "); scanf("%lf", &harga_product);
+					updateProduk(nama_product, harga_product, search_product);
+					
+					}
+					printf(">>press any key to home menu");
+					getch(); break;
+				 	
+			/*case 3:
+					system("cls");
+					printf("************************************\n");
+					printf(" Edit Product \n");
+					printf("************************************\n");
+					printf(" Search Product  : "); scanf("%s", nama_product);
+					search_product = searchProduk(nama_product, T.root);
+					printf("************************************\n");
+					printf(" Product Name  : "); scanf("%s", nama_product);
+					printf(" Product Price : "); scanf("%lf",&harga_product);
+					printf("************************************\n");
+					printf(">>press any key to home menu\n");
+				 	getch(); break;
+		*/		 	
+			case 4:
+					system("cls");
+					printf("************************************\n");
+					printf(" Search product \n");
+					printf("************************************\n");
+					printf(" Search Product  : "); scanf("%s", nama_product);
+					search_product = searchProduk(nama_product, T.root);
+					printf("************************************\n");
+					printf(" Product Name  : %s\n", nama_product);
+					printf(" Product Price : %0.2f\n",&harga_product);
+					printf("************************************\n");
+					printf(">>press any key to home menu\n");
+				 	getch(); break;
+				 	
+			case 5:
+					system("cls");
+					pri
+					ntf("************************************\n");
+					printf(" All Product (In Order Traversing) \n");
+					printf("************************************\n");
+					printf("%s(%0.2f) \n", nama_product, harga_product);
+					printTreeInOrder(T.root);
+					printf("************************************\n");
+					printf(">>press any key to home menu\n");
+				 	getch(); break;
+			}	
+}	while(pilih >= 1 && pilih <= 5);
+
+	return 0;
+}
+Produk* makeProduk(char nama[], double harga){
+	Produk *p = (Produk*)malloc(sizeof(Produk));
+	strcpy(p->nama, nama);
+	p->harga = harga;
+	p->kiri = NULL;
+	p->kanan = NULL;
+	
+	return p;
+}
+
+void insertProduk(char nama[], double harga, BinarySearchTree *T)
+{
+	Produk *baru, *pNow, *temp;
+	baru = makeProduk(nama, harga);
+	if(T->root == NULL){
+		T->root = baru;
+	}else{
+		pNow = T->root;
+		temp = T->root;
+		while (pNow->harga != harga && temp != NULL){
+			pNow = temp;
+			if (pNow->harga < harga)
+			{
+				temp = pNow->kanan;
+			}
+			else{
+				temp = pNow->kiri;
+			}
+		}
+		if (pNow->harga != harga){
+			if (pNow->harga < harga){
+				pNow->kanan = baru;
+			}
+			else{
+				pNow->kiri = baru;
+			}
+		}else{
+			printf("Product has been inserted!!\n");
+		}
+	}
+}
+
+void printTreeInOrder(Produk *root){
+	if(root != NULL){
+		printTreeInOrder(root->kiri);
+		printf("%s(%.2f) ", root->nama, root->harga);
+		printTreeInOrder(root->kanan);
+	}
+}
+
+Produk* searchProduk(char nama[], Produk *root)
+{
+	if(root != NULL)
+	{
+		if(strcmp(root->nama, nama)==0)
+		{
+			return root;
+		}
+		searchProduk(nama, root->kiri);
+		searchProduk(nama, root->kanan);
+	}
+	
+	return NULL;
+}
+
+void updateProduk(char nama[], double harga, Produk *node)
+{
+	strcmp(node->nama, nama);
+	node->harga = harga;
+}
